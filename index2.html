@@ -11,6 +11,7 @@
     	}
         body {
             font-family: "Montserrat", sans-serif;
+            color: white;
         }
         
         a:link {
@@ -35,34 +36,50 @@
         .container {
             display: grid; 
             grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr; 
-            grid-template-rows: 1fr 1fr 1fr; 
+            grid-template-rows: 1 fr 1fr 1fr 1fr; 
             gap: 0px 0px; 
             grid-template-areas: 
                 "LogoTop LogoTop LogoTop LogoTop LogoTop LogoTop"
+                "company company company company company company"
                 "mommo martin tommy magnus lars koffe"
-                ". . . . . ."; 
+                "mommolnk martinlnk tommylnk magnuslnk larslnk koffelnk"; 
             width: 1024px; 
             gap: 20px 0px; 
             justify-items: stretch; 
+            place-self: center;
         }
         .LogoTop { grid-area: LogoTop; justify-self: center;  }
+        .company { grid-area: company; justify-self: center;   }
         .mommo { grid-area: mommo;justify-self: center;  }
         .martin { grid-area: martin;justify-self: center;  }
         .tommy { grid-area: tommy; justify-self: center; }
         .magnus { grid-area: magnus; justify-self: center; }
         .lars { grid-area: lars;justify-self: center;  }
         .koffe { grid-area: koffe; justify-self: center; }
+        .mommolnk { grid-area: mommolnk; justify-self: center;}
+        .martinlnk { grid-area: martinlnk; justify-self: center;}
+        .tommylnk { grid-area: tommylnk; justify-self: center;}
+        .magnuslnk { grid-area: magnuslnk; justify-self: center;}
+        .larslnk { grid-area: larslnk; justify-self: center;}
+        .koffelnk { grid-area: koffelnk; justify-self: center;}
     </style>
   </head>
   <body>
     <div class="container">
         <div class="LogoTop"><img src="img/logo.png" height=350/></div>
-        <div class="mommo"><img src="img/Mommo-web.png" height=250/><br/><a href="https://www.linkedin.com/in/mommotabatabai/">Profile</a></div>
-        <div class="martin"> <img src="img/Martin-web.png" height=250 /><br/><a href="https://www.linkedin.com/in/mommotabatabai/">Profile</a></div>
-        <div class="tommy"><img src="img/Tommy-web.png" height=250/><br/><a href="https://www.linkedin.com/in/mommotabatabai/">Profile</a></div>
-        <div class="magnus"><img src="img/Magnus-web.png" height=250 /><br/><a href="https://www.linkedin.com/in/mommotabatabai/">Profile</a></div>
-        <div class="lars"><img src="img/Lars-web.png" height=250 /><br/><a href="https://www.linkedin.com/in/mommotabatabai/">Profile</a></div>
-        <div class="koffe"><img src="img/Koffe-web.png" height=250 /><br/><a href="https://www.linkedin.com/in/mommotabatabai/">Profile</a></div>
+        <div class="company"><h1>Niovi Perspective AB</h1></div>
+        <div class="mommo"><img src="img/Mommo-web.png" height=250/></div>
+        <div class="martin"> <img src="img/Martin-web.png" height=250 /></div>
+        <div class="tommy"><img src="img/Tommy-web.png" height=250/></div>
+        <div class="magnus"><img src="img/Magnus-web.png" height=250 /></div>
+        <div class="lars"><img src="img/Lars-web.png" height=250 /></div>
+        <div class="koffe"><img src="img/Koffe-web.png" height=250 /></div>
+        <div class="mommolnk"><a href="https://www.linkedin.com/in/mommotabatabai/">Mommo Tabatai</a></div>
+        <div class="martinlnk"><a href="https://www.linkedin.com/in/martinwoxneryd/">Martin Woxneryd</a></div>
+        <div class="tommylnk"><a href="https://www.linkedin.com/in/tommyturkijevic/">Tommy Turkijevic</a></div>
+        <div class="magnuslnk"><a href="https://www.linkedin.com/in/magnus-harlin/">Magnus Härlin</a></div>
+        <div class="larslnk"><a href="https://www.linkedin.com/in/lars-göransson-3a303617/">Lars Göransson</a></div>
+        <div class="koffelnk"><a href="https://www.linkedin.com/in/kristoffernoren/">Kristoffer Noreen</a></div>
       </div>
   </body>
 </html>
