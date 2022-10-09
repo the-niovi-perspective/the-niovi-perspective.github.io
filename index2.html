@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
+    <title>The Niovi Perspective</title>
+    <style type="text/css">
+    	html {
+    		background-color: black;
+    	}
+        body {
+            font-family: "Montserrat", sans-serif;
+        }
+        
+        a:link {
+            color: white;
+        }
+
+        /* visited link */
+        a:visited {
+            color: white;
+        }
+
+        /* mouse over link */
+        a:hover {
+            color: white;
+        }
+
+        /* selected link */
+        a:active {
+            color: white;
+        }
+
+        .container {
+            display: grid; 
+            grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr; 
+            grid-template-rows: 1fr 1fr 1fr; 
+            gap: 0px 0px; 
+            grid-template-areas: 
+                "LogoTop LogoTop LogoTop LogoTop LogoTop LogoTop"
+                "mommo martin tommy magnus lars koffe"
+                ". . . . . ."; 
+            width: 1024px; 
+            gap: 20px 0px; 
+            justify-items: stretch; 
+        }
+        .LogoTop { grid-area: LogoTop; justify-self: center;  }
+        .mommo { grid-area: mommo;justify-self: center;  }
+        .martin { grid-area: martin;justify-self: center;  }
+        .tommy { grid-area: tommy; justify-self: center; }
+        .magnus { grid-area: magnus; justify-self: center; }
+        .lars { grid-area: lars;justify-self: center;  }
+        .koffe { grid-area: koffe; justify-self: center; }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+        <div class="LogoTop"><img src="img/logo.png" height=350/></div>
+        <div class="mommo"><img src="img/Mommo-web.png" height=250/><br/><a href="https://www.linkedin.com/in/mommotabatabai/">Profile</a></div>
+        <div class="martin"> <img src="img/Martin-web.png" height=250 /><br/><a href="https://www.linkedin.com/in/mommotabatabai/">Profile</a></div>
+        <div class="tommy"><img src="img/Tommy-web.png" height=250/><br/><a href="https://www.linkedin.com/in/mommotabatabai/">Profile</a></div>
+        <div class="magnus"><img src="img/Magnus-web.png" height=250 /><br/><a href="https://www.linkedin.com/in/mommotabatabai/">Profile</a></div>
+        <div class="lars"><img src="img/Lars-web.png" height=250 /><br/><a href="https://www.linkedin.com/in/mommotabatabai/">Profile</a></div>
+        <div class="koffe"><img src="img/Koffe-web.png" height=250 /><br/><a href="https://www.linkedin.com/in/mommotabatabai/">Profile</a></div>
+      </div>
+  </body>
+</html>
