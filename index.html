@@ -1,122 +1,686 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="sv">
   <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>The Niovi Perspective</title>
-    
-    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
-    <link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-    
-    <style type="text/css">
-    	html {
-    		background-color: black;
-    	}
-
-        body {
-            font-family: "Montserrat", sans-serif;
-    		background-color: black;
-        }
-        
-        a:link {
-            color: white;
-        }
-
-        a:visited {
-            color: white;
-        }
-
-        a:hover {
-            color: white;
-        }
-
-        a:active {
-            color: white;
-        }
-
-        .part {
-            display: flex;
-            flex-wrap: wrap;
-        }
-
-        .logo {
-            width: 1000px;
-            margin: 0 auto;
-            margin-top: 100px;
-            margin-bottom: 100px;
-        }
-
-        .person {
-            width: 180px;
-            margin: 0 auto;
-            margin-bottom: 30px;
-        }
-
-        .profile {
-            width: 160px;
-        }
-
-        .filler {
-            flex-grow: 1;
-        }
-
-        @media (max-width: 1200px) {
-            .logo {
-                width: 100%;
-                max-width: 1000px;
-                margin-top: 10px;
-                margin-bottom: 10px;
-            }
-            .part {
-                flex-direction: column;
-            }
-            .profile {
-                width: 40vw;
-            }
-        }
-
-    </style>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Niovi – Förhandsgranskning</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
   </head>
-  <body>
-    <div class="part">
-        <div class="filler">&nbsp;</div>
-        <img class="logo" src="img/primary_silverLarge.png"/>
-        <div class="filler">&nbsp;</div>
+  <body class="bg-zinc-950 text-zinc-100">
+    <div id="root"></div>
+    <script type="text/babel" data-presets="env,react">
+
+const { useEffect, useState } = React;
+
+// Single-file React site for Niovi - validated JSX, Montserrat font, no TypeScript types
+
+function NioviSite() {
+  // Tema låst till mörkerläge
+  const [consultOpen, setConsultOpen] = useState(false);
+  const [productOpen, setProductOpen] = useState(false);
+  const [contact, setContact] = useState({ name: "", email: "", message: "" });
+  const [flashContact, setFlashContact] = useState(false);
+
+  useEffect(() => {
+    document.documentElement.classList.add("dark");
+  }, []);
+
+  const scrollToId = (id) => {
+    const el = document.querySelector(id);
+    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
+  const sendToContact = (message) => {
+    setContact((c) => ({ ...c, message }));
+    setConsultOpen(false);
+    setProductOpen(false);
+    setTimeout(() => {
+      scrollToId("#kontakt");
+      setFlashContact(true);
+      setTimeout(() => setFlashContact(false), 1500);
+    }, 50);
+  };
+
+  return (
+    <div className="niovi-font min-h-screen bg-zinc-950 text-zinc-100">
+      <style>{`@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap'); :root { --niovi-font: 'Montserrat', system-ui, -apple-system, Segoe UI, Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif; } .niovi-font, .niovi-font * { font-family: var(--niovi-font) !important; }`}</style>
+      <Header onConsult={() => scrollToId('#konsult-info')} onProduct={() => scrollToId('#produkt-info')} />
+      <main>
+        <Hero onOpenConsult={() => scrollToId('#konsult-info')} onOpenProduct={() => scrollToId('#produkt-info')} />
+        <ValueProps />
+        <Services />
+        <ConsultInfo onStart={() => setConsultOpen(true)} />
+        <ProductInfo onStart={() => setProductOpen(true)} />
+        <ProductSpotlight />
+        <OutcomesPricing />
+        <Principles />
+        <Careers />
+        <About />
+        <Contact contact={contact} setContact={setContact} flash={flashContact} />
+      </main>
+
+      {consultOpen && <ConsultModal onClose={() => setConsultOpen(false)} onSubmit={(s) => sendToContact(s)} />}
+      {productOpen && <ProductModal onClose={() => setProductOpen(false)} onSubmit={(s) => sendToContact(s)} />}
+
+      <Footer />
     </div>
+  );
+}
 
-    <br/><br/>
+function LogoMark({ className = "" }) {
+  return <span className={`inline-block rounded-full aspect-square bg-gradient-to-br from-emerald-400 to-cyan-500 ${className}`} />;
+}
 
-    <section id="contact" class="content-section text-center">
-        <div class="container">
-          <div class="row">
-            <div class="col-lg-8 mx-auto">
-              <h2>Contact Niovi</h2>
-              <ul class="list-inline banner-social-buttons">
-                <li class="list-inline-item">
-                  <a href="mailto:info@niovi.se" class="btn btn-default btn-lg">
-                    <i class="fa fa-envelope fa-fw"></i>
-                    <span class="network-name">MAIL</span>
-                  </a>
-                </li>
-                <li class="list-inline-item">
-                  <a href="https://www.linkedin.com/company/88959943/" class="btn btn-default btn-lg">
-                    <i class="fa fa-linkedin-square fa-fw"></i>
-                    <span class="network-name">LinkedIn</span>
-                  </a>
-                </li>
+function Container({ children, className = "" }) {
+  return <div className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 ${className}`}>{children}</div>;
+}
+
+function Header({ onConsult, onProduct }) {
+  const [open, setOpen] = useState(false);
+  const nav = [
+    { href: "#tjanster", label: "Vad vi gör" },
+    { href: "#konsult-info", label: "Konsulttjänster" },
+    { href: "#produkt-info", label: "Produkt & partnerskap" },
+    { href: "#paket", label: "Paket & priser" },
+    { href: "#karriar", label: "Karriär" },
+    { href: "#kontakt", label: "Kontakt" }
+  ];
+  return (
+    <header className="sticky top-0 z-50 backdrop-blur supports-[backdrop-filter]:bg-zinc-900/70 bg-zinc-900/70 border-b border-zinc-800/60">
+      <Container className="flex items-center justify-between h-16">
+        <a href="#" className="flex items-center gap-2 group" aria-label="Niovi startsida">
+          <img src="img/primary_silverLarge.png" alt="Niovi" className="h-8 w-auto" />
+        </a>
+        <nav className="hidden md:flex items-center gap-8 text-sm">
+          {nav.map((n) => (
+            <a key={n.href} href={n.href} className="hover:opacity-80">{n.label}</a>
+          ))}
+          <button onClick={onConsult} className="inline-flex items-center rounded-2xl px-4 py-2 bg-white text-zinc-900">Anlita konsulter</button>
+        </nav>
+        <div className="md:hidden flex items-center gap-2">
+          <button onClick={() => setOpen(!open)} className="inline-flex h-9 w-9 items-center justify-center rounded-2xl border border-zinc-800" aria-label="Meny">
+            <div className="space-y-1.5">
+              <span className="block h-0.5 w-5 bg-current" />
+              <span className="block h-0.5 w-5 bg-current" />
+              <span className="block h-0.5 w-5 bg-current" />
+            </div>
+          </button>
+        </div>
+      </Container>
+      {open && (
+        <div className="md:hidden border-t border-zinc-800">
+          <Container>
+            <div className="py-4 flex flex-col gap-4">
+              {nav.map((n) => (
+                <a key={n.href} href={n.href} onClick={() => setOpen(false)} className="py-1">{n.label}</a>
+              ))}
+              <button onClick={() => { setOpen(false); onProduct(); }} className="mt-2 inline-flex items-center justify-center rounded-2xl px-4 py-2 bg-white text-zinc-900">Utforska produktspåret</button>
+            </div>
+          </Container>
+        </div>
+      )}
+    </header>
+  );
+}
+
+function Hero({ onOpenConsult, onOpenProduct }) {
+  return (
+    <section className="relative overflow-hidden">
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0">
+        <div className="absolute -top-24 -right-24 h-72 w-72 rounded-full bg-emerald-400/20 blur-3xl" />
+        <div className="absolute -bottom-24 -left-24 h-72 w-72 rounded-full bg-cyan-400/20 blur-3xl" />
+      </div>
+      <Container className="py-20 md:py-28">
+        <div className="max-w-3xl">
+          <h1 className="text-4xl md:text-6xl font-semibold leading-tight tracking-tight">
+            <span className="block">Niovi är experter på mjukvaruutveckling & AI</span>
+            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-emerald-500 to-cyan-500">från tanke till strategi till produkt</span>
+          </h1>
+          <div className="relative mt-6">
+            <div className="absolute left-0 top-0 bottom-0 w-1 rounded-full bg-gradient-to-b from-emerald-500 to-cyan-500" />
+            <div className="pl-6 p-6 md:p-8 rounded-2xl bg-gradient-to-br from-emerald-900/20 to-cyan-900/20 border border-emerald-200/60 dark:border-emerald-700/40 shadow-md ring-1 ring-emerald-500/10">
+              <p className="text-2xl md:text-3xl font-semibold leading-tight">Konsulttjänster som levererar. Produkter som skalar.</p>
+              <p className="mt-3 text-lg md:text-xl">Niovi utvecklar driftsäker och skalbar mjukvara, från kompletta lösningar till smarta dataflöden, integrationer och molninfrastruktur. Vi använder AI där det gör verklig skillnad och skapar mätbar affärsnytta.</p>
+              <p className="mt-2 text-lg md:text-xl">Hållbarhet och långsiktighet är kärnan i vårt arbete. Vi fokuserar på att skapa:</p>
+              <ul className="mt-2 text-lg md:text-xl space-y-1">
+                <li className="flex gap-2 items-start"><span className="inline-block rounded-full w-2 h-2 mt-2 flex-shrink-0 bg-gradient-to-br from-emerald-400 to-cyan-500" /><span>Effektiva, lättförståeliga lösningar byggda på ren och välstrukturerad kod, enkel att underhålla och vidareutveckla.</span></li>
+                <li className="flex gap-2 items-start"><span className="inline-block rounded-full w-2 h-2 mt-2 flex-shrink-0 bg-gradient-to-br from-emerald-400 to-cyan-500" /><span>Stabila och kostnadseffektiva miljöer som ger trygg, skalbar och kontrollerad drift över tid.</span></li>
+                <li className="flex gap-2 items-start"><span className="inline-block rounded-full w-2 h-2 mt-2 flex-shrink-0 bg-gradient-to-br from-emerald-400 to-cyan-500" /><span>Fullständiga överlämningar som gör ert team självständigt, utan beroenden eller dolda kostnader.</span></li>
               </ul>
+              <div className="mt-4 flex flex-wrap gap-3">
+                <button onClick={onOpenConsult} className="inline-flex items-center rounded-2xl px-5 py-3 bg-white text-zinc-900">Anlita konsulter</button>
+                <button onClick={onOpenProduct} className="inline-flex items-center rounded-2xl px-5 py-3 border border-zinc-700">Utforska produktspåret</button>
+              </div>
             </div>
           </div>
         </div>
+      </Container>
     </section>
+  );
+}
 
-    <footer>
-        <div class="container text-center">
-          <p>Copyright &copy; The Niovi Perspective AB 2022</p>
+function ValueProps() {
+  const items = [
+    { title: "Mätbar effekt före timmar", text: "Vi sätter mål och KPI:er i början och bevisar leveransen i drift, inte i slides." },
+    { title: "Färdiga paket, fasta ramar", text: "Tydlig omfattning, tidplan och pris. Mindre osäkerhet, snabbare start." },
+    { title: "AI där det lönar sig", text: "Vi använder AI när det förstärker människor och processer, inte för show." },
+    { title: "Hållbar leverans", text: "Vi lämnar system som tål förändring, utan växande teknisk skuld." }
+  ];
+  return (
+    <section className="py-16 md:py-24">
+      <Container>
+        <div className="grid md:grid-cols-4 gap-8">
+          {items.map((it) => (
+            <div key={it.title} className="p-6 rounded-2xl border border-emerald-200/60 dark:border-emerald-700/40 bg-gradient-to-br from-emerald-900/20 to-cyan-900/20 shadow-sm">
+              <h3 className="text-xl font-semibold mb-2">{it.title}</h3>
+              <p className="text-zinc-300">{it.text}</p>
+            </div>
+          ))}
         </div>
-    </footer>
+      </Container>
+    </section>
+  );
+}
 
-    <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
+function Services() {
+  const services = [
+    { id: "tjanster", title: "Konsulttjänster", bullets: [
+      "Fullstack utveckling",
+      "Data och integrationer",
+      "Moln och plattform (AWS, Azure, GCP)",
+      "AI integration i befintliga flöden"
+    ] },
+    { title: "Utvecklingspartner", bullets: [
+      "Tech lead och arkitektur",
+      "Skalbar CI/CD och DevEx",
+      "Förändringsledning i AI skiftet",
+      "Affärsutveckling",
+      "Rekrytering och talent management",
+      "Organisation och arbetssätt"
+    ] },
+    { title: "Paketerade erbjudanden", bullets: [
+      "Tech genomlysning: Arkitektur och kodgranskning, åtgärdsplan för teknisk skuld, prioriterad roadmap med effekt/insats",
+      "AI kompass (light): Identifierade användningsfall som lönar sig, datakällor och datakvalitet säkrad, POC plan med mätpunkter",
+      "Produktifieringsstart: Från tjänst till paketbar leverans, pris och utfallsmodell, enkel marknadsintroduktion"
+    ] }
+  ];
+  return (
+    <section id="tjanster" className="py-16 md:py-24 bg-zinc-900/30">
+      <Container>
+        <div className="mb-10">
+          <h2 className="text-3xl md:text-4xl font-semibold tracking-tight">Vad vi gör</h2>
+          <p className="mt-2 text-zinc-300 max-w-2xl">Tre ben: utveckling, data/plattform och AI. Vi blandar storbolagsdisciplin med entreprenörens tempo, alltid med mätbar effekt.</p>
+        </div>
+        <div className="grid md:grid-cols-3 gap-6">
+          {services.map((s) => (
+            <div key={s.title} className="p-6 rounded-2xl bg-gradient-to-br from-emerald-900/20 to-cyan-900/20 border border-emerald-200/60 dark:border-emerald-700/40">
+              <h3 className="text-lg font-semibold mb-3">{s.title}</h3>
+              <ul className="space-y-2 text-zinc-300">
+                {s.bullets.map((b) => (
+                  <li key={b} className="flex gap-2 items-start"><span className="inline-block rounded-full w-2 h-2 mt-1.5 flex-shrink-0 bg-gradient-to-br from-emerald-400 to-cyan-500" /><span>{b}</span></li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </Container>
+    </section>
+  );
+}
+
+function ConsultInfo({ onStart }) {
+  return (
+    <section id="konsult-info" className="py-16 md:py-24 bg-zinc-900/30">
+      <Container>
+        <div className="mb-10 max-w-3xl">
+          <h2 className="text-3xl md:text-4xl font-semibold tracking-tight">Anlita konsulter</h2>
+          <p className="mt-2 text-zinc-300">Så här jobbar vi, seniora utvecklare och arkitekter, axel mot axel med ert team. Fokus på drift, kvalitet och mätbar effekt.</p>
+        </div>
+        <div className="grid md:grid-cols-3 gap-6">
+          <div className="p-6 rounded-2xl bg-gradient-to-br from-emerald-900/20 to-cyan-900/20 border border-emerald-200/60 dark:border-emerald-700/40">
+            <h3 className="text-lg font-semibold mb-2">Engagemang</h3>
+            <ul className="space-y-1 text-zinc-300">
+              <li className="flex gap-2 items-start"><span className="inline-block rounded-full w-2 h-2 mt-1.5 flex-shrink-0 bg-gradient-to-br from-emerald-400 to-cyan-500" /><span>Teamförstärkning eller leveransåtagande</span></li>
+              <li className="flex gap-2 items-start"><span className="inline-block rounded-full w-2 h-2 mt-1.5 flex-shrink-0 bg-gradient-to-br from-emerald-400 to-cyan-500" /><span>Onsite, hybrid eller remote</span></li>
+            </ul>
+          </div>
+          <div className="p-6 rounded-2xl bg-gradient-to-br from-emerald-900/20 to-cyan-900/20 border border-emerald-200/60 dark:border-emerald-700/40">
+            <h3 className="text-lg font-semibold mb-2">Senioritet & kapacitet</h3>
+            <ul className="space-y-1 text-zinc-300">
+              <li className="flex gap-2 items-start"><span className="inline-block rounded-full w-2 h-2 mt-1.5 flex-shrink-0 bg-gradient-to-br from-emerald-400 to-cyan-500" /><span>Seniora utvecklare, arkitekter, tech leads och CTO</span></li>
+              <li className="flex gap-2 items-start"><span className="inline-block rounded-full w-2 h-2 mt-1.5 flex-shrink-0 bg-gradient-to-br from-emerald-400 to-cyan-500" /><span>Erfarenhet från start-ups och scale-ups till storbolag</span></li>
+              <li className="flex gap-2 items-start"><span className="inline-block rounded-full w-2 h-2 mt-1.5 flex-shrink-0 bg-gradient-to-br from-emerald-400 to-cyan-500" /><span>Vi levererar allt från enskild specialist till komplett team</span></li>
+            </ul>
+          </div>
+          <div className="p-6 rounded-2xl bg-gradient-to-br from-emerald-900/20 to-cyan-900/20 border border-emerald-200/60 dark:border-emerald-700/40">
+            <h3 className="text-lg font-semibold mb-2">Domäner & miljöer</h3>
+            <ul className="space-y-1 text-zinc-300">
+              <li className="flex gap-2 items-start"><span className="inline-block rounded-full w-2 h-2 mt-1.5 flex-shrink-0 bg-gradient-to-br from-emerald-400 to-cyan-500" /><span>Cybersecurity</span></li>
+              <li className="flex gap-2 items-start"><span className="inline-block rounded-full w-2 h-2 mt-1.5 flex-shrink-0 bg-gradient-to-br from-emerald-400 to-cyan-500" /><span>Climate/EnergyTech</span></li>
+              <li className="flex gap-2 items-start"><span className="inline-block rounded-full w-2 h-2 mt-1.5 flex-shrink-0 bg-gradient-to-br from-emerald-400 to-cyan-500" /><span>MedTech</span></li>
+              <li className="flex gap-2 items-start"><span className="inline-block rounded-full w-2 h-2 mt-1.5 flex-shrink-0 bg-gradient-to-br from-emerald-400 to-cyan-500" /><span>Fintech/Payments, e-handel & SaaS</span></li>
+              <li className="flex gap-2 items-start"><span className="inline-block rounded-full w-2 h-2 mt-1.5 flex-shrink-0 bg-gradient-to-br from-emerald-400 to-cyan-500" /><span>GenAI applikationer, copilots & automation</span></li>
+              <li className="flex gap-2 items-start"><span className="inline-block rounded-full w-2 h-2 mt-1.5 flex-shrink-0 bg-gradient-to-br from-emerald-400 to-cyan-500" /><span>AWS/Azure/GCP, on-prem & hybridmiljöer</span></li>
+            </ul>
+          </div>
+        </div>
+        <div className="mt-8 grid md:grid-cols-2 gap-6">
+          <div className="p-6 rounded-2xl border border-emerald-200/60 dark:border-emerald-700/40 bg-gradient-to-br from-emerald-900/20 to-cyan-900/20">
+            <h3 className="text-lg font-semibold mb-2">Vad du kan förvänta dig</h3>
+            <ul className="space-y-1 text-zinc-300">
+              <li className="flex gap-2 items-start"><span className="inline-block rounded-full w-2 h-2 mt-1.5 flex-shrink-0 bg-gradient-to-br from-emerald-400 to-cyan-500" /><span>Tydliga mål & KPI:er från start</span></li>
+              <li className="flex gap-2 items-start"><span className="inline-block rounded-full w-2 h-2 mt-1.5 flex-shrink-0 bg-gradient-to-br from-emerald-400 to-cyan-500" /><span>Transparens i plan, status och risker</span></li>
+              <li className="flex gap-2 items-start"><span className="inline-block rounded-full w-2 h-2 mt-1.5 flex-shrink-0 bg-gradient-to-br from-emerald-400 to-cyan-500" /><span>Kunskapsöverföring och ordentlig överlämning</span></li>
+            </ul>
+          </div>
+          <div className="p-6 rounded-2xl border border-emerald-200/60 dark:border-emerald-700/40 bg-gradient-to-br from-emerald-900/20 to-cyan-900/20">
+            <h3 className="text-lg font-semibold mb-2">När passar Niovi?</h3>
+            <ul className="space-y-1 text-zinc-300">
+              <li className="flex gap-2 items-start"><span className="inline-block rounded-full w-2 h-2 mt-1.5 flex-shrink-0 bg-gradient-to-br from-emerald-400 to-cyan-500" /><span>Ni behöver fart och senioritet utan fluff</span></li>
+              <li className="flex gap-2 items-start"><span className="inline-block rounded-full w-2 h-2 mt-1.5 flex-shrink-0 bg-gradient-to-br from-emerald-400 to-cyan-500" /><span>Ni behöver spjutspets och breddat perspektiv</span></li>
+              <li className="flex gap-2 items-start"><span className="inline-block rounded-full w-2 h-2 mt-1.5 flex-shrink-0 bg-gradient-to-br from-emerald-400 to-cyan-500" /><span>Ni vill väva in AI där det faktiskt lönar sig</span></li>
+              <li className="flex gap-2 items-start"><span className="inline-block rounded-full w-2 h-2 mt-1.5 flex-shrink-0 bg-gradient-to-br from-emerald-400 to-cyan-500" /><span>Ni prioriterar hållbarhet och lång livslängd</span></li>
+            </ul>
+          </div>
+        </div>
+        <div className="mt-8 p-4 rounded-2xl border border-emerald-200/60 dark:border-emerald-700/40 bg-gradient-to-br from-emerald-900/20 to-cyan-900/20">
+          <p className="text-sm md:text-base"><span className="font-semibold">Transparens i pris:</span> 1000–1400 SEK/h (exkl. moms), beroende på roll, senioritet och åtagande.</p>
+        </div>
+        <div className="mt-4 flex flex-wrap gap-3">
+          <button onClick={onStart} className="inline-flex items-center rounded-2xl px-5 py-3 bg-white text-zinc-900">Starta förfrågan</button>
+          <a href="#kontakt" className="inline-flex items-center rounded-2xl px-5 py-3 border border-zinc-700">Prata med oss</a>
+        </div>
+      </Container>
+    </section>
+  );
+}
+
+function ProductInfo({ onStart }) {
+  return (
+    <section id="produkt-info" className="py-16 md:py-24">
+      <Container>
+        <div className="mb-10 max-w-3xl">
+          <h2 className="text-3xl md:text-4xl font-semibold tracking-tight">Utforska produktspåret</h2>
+          <p className="mt-2 text-zinc-300">Niovis produktspår har två ben: Partnerskap där vi går in med minoritetsägande och driver teknikutvecklingen samt produktutveckling där ni äger allt och vi bygger, implementerar och driftar.</p>
+        </div>
+        <div className="grid md:grid-cols-2 gap-6">
+          <div className="p-6 rounded-2xl bg-gradient-to-br from-emerald-900/20 to-cyan-900/20 border border-emerald-200/60 dark:border-emerald-700/40">
+            <h3 className="text-lg font-semibold mb-2">Partnerskap (minoritetsägande 10 till 30%)</h3>
+            <ul className="space-y-1 text-zinc-300">
+              <li className="flex gap-2 items-start"><span className="inline-block rounded-full w-2 h-2 mt-1.5 flex-shrink-0 bg-gradient-to-br from-emerald-400 to-cyan-500" /><span>Vi investerar tid och leder teknikutvecklingen</span></li>
+              <li className="flex gap-2 items-start"><span className="inline-block rounded-full w-2 h-2 mt-1.5 flex-shrink-0 bg-gradient-to-br from-emerald-400 to-cyan-500" /><span>Grundarna behåller majoritet och därmed drivkraften</span></li>
+              <li className="flex gap-2 items-start"><span className="inline-block rounded-full w-2 h-2 mt-1.5 flex-shrink-0 bg-gradient-to-br from-emerald-400 to-cyan-500" /><span>Ägarandel: 10 till 30%, case: Minabolag (30%)</span></li>
+              <li className="flex gap-2 items-start"><span className="inline-block rounded-full w-2 h-2 mt-1.5 flex-shrink-0 bg-gradient-to-br from-emerald-400 to-cyan-500" /><span>Niovi tar ansvar för arkitektur, roadmap och utvecklingsteam</span></li>
+            </ul>
+            <div className="mt-4 flex gap-3">
+              <button onClick={onStart} className="inline-flex items-center rounded-2xl px-5 py-3 bg-white text-zinc-900">Starta partnerskapsdialog</button>
+              <a href="#produkt" className="inline-flex items-center rounded-2xl px-5 py-3 border border-zinc-700">Läs om Minabolag</a>
+            </div>
+          </div>
+          <div className="p-6 rounded-2xl bg-gradient-to-br from-emerald-900/20 to-cyan-900/20 border border-emerald-200/60 dark:border-emerald-700/40">
+            <h3 className="text-lg font-semibold mb-2">Produktutveckling</h3>
+            <ul className="space-y-1 text-zinc-300">
+              <li className="flex gap-2 items-start"><span className="inline-block rounded-full w-2 h-2 mt-1.5 flex-shrink-0 bg-gradient-to-br from-emerald-400 to-cyan-500" /><span>Vi utvecklar er idé till färdig produkt, IP stannar hos er</span></li>
+              <li className="flex gap-2 items-start"><span className="inline-block rounded-full w-2 h-2 mt-1.5 flex-shrink-0 bg-gradient-to-br from-emerald-400 to-cyan-500" /><span>Produktutveckling och implementation</span></li>
+              <li className="flex gap-2 items-start"><span className="inline-block rounded-full w-2 h-2 mt-1.5 flex-shrink-0 bg-gradient-to-br from-emerald-400 to-cyan-500" /><span>Outcome baserade ramar, tydlig kostnad och tidplan</span></li>
+              <li className="flex gap-2 items-start"><span className="inline-block rounded-full w-2 h-2 mt-1.5 flex-shrink-0 bg-gradient-to-br from-emerald-400 to-cyan-500" /><span>Stöd för drift, övervakning och vidareutveckling</span></li>
+            </ul>
+            <div className="mt-4 flex gap-3">
+              <button onClick={onStart} className="inline-flex items-center rounded-2xl px-5 py-3 bg-white text-zinc-900">Starta produktförfrågan</button>
+              <a href="#kontakt" className="inline-flex items-center rounded-2xl px-5 py-3 border border-zinc-700">Prata med oss</a>
+            </div>
+          </div>
+        </div>
+      </Container>
+    </section>
+  );
+}
+
+function ProductSpotlight() {
+  return (
+    <section id="produkt" className="py-16 md:py-24">
+      <Container>
+        <div className="grid md:grid-cols-2 gap-10 items-center">
+          <div>
+            <p className="text-sm font-medium text-emerald-300 mb-1">Just nu lyfter vi fram Minabolag som vårt huvudcase</p>
+            <h2 className="text-3xl md:text-4xl font-semibold tracking-tight">Minabolag</h2>
+            <p className="mt-4 text-zinc-300">Vårt produktspår som omvandlar ekonomisk data till visuella presentationer och underlag, för snabbare beslut, bättre kommunikation och mindre manuellt arbete. Produktens inbyggda AI ger insikter utifrån den ekonomiska datan.</p>
+            <ul className="mt-6 space-y-2 text-zinc-300">
+              <li className="flex gap-2 items-start"><span className="inline-block rounded-full w-2 h-2 mt-1.5 flex-shrink-0 bg-gradient-to-br from-emerald-400 to-cyan-500" /><span>Produktens inbyggda AI ger insikter utifrån den ekonomiska datan</span></li>
+              <li className="flex gap-2 items-start"><span className="inline-block rounded-full w-2 h-2 mt-1.5 flex-shrink-0 bg-gradient-to-br from-emerald-400 to-cyan-500" /><span>Automatiska dashboards & rapporter</span></li>
+              <li className="flex gap-2 items-start"><span className="inline-block rounded-full w-2 h-2 mt-1.5 flex-shrink-0 bg-gradient-to-br from-emerald-400 to-cyan-500" /><span>Export till presentationer på sekunder</span></li>
+              <li className="flex gap-2 items-start"><span className="inline-block rounded-full w-2 h-2 mt-1.5 flex-shrink-0 bg-gradient-to-br from-emerald-400 to-cyan-500" /><span>Anpassas för både styrelse och operativt team</span></li>
+            </ul>
+            <div className="mt-6 flex gap-3">
+              <a href="#kontakt" className="inline-flex items-center rounded-2xl px-5 py-3 bg-emerald-600 text-white">Boka demo</a>
+              <a href="#paket" className="inline-flex items-center rounded-2xl px-5 py-3 border border-zinc-700">Se paket</a>
+            </div>
+          </div>
+          <div className="p-6 rounded-2xl border border-emerald-200/60 dark:border-emerald-700/40 bg-gradient-to-br from-emerald-900/20 to-cyan-900/20">
+            <dl className="grid grid-cols-2 gap-4 text-sm">
+              <div>
+                <dt className="text-zinc-500">Bas</dt>
+                <dd className="font-medium">Göteborg</dd>
+              </div>
+              <div>
+                <dt className="text-zinc-500">Fokus</dt>
+                <dd className="font-medium">Mjukvara, data & AI</dd>
+              </div>
+              <div>
+                <dt className="text-zinc-500">Arbetssätt</dt>
+                <dd className="font-medium">Outcome baserat</dd>
+              </div>
+              <div>
+                <dt className="text-zinc-500">Bolag</dt>
+                <dd className="font-medium">Konsult + produkt (Minabolag)</dd>
+              </div>
+            </dl>
+          </div>
+        </div>
+      </Container>
+    </section>
+  );
+}
+
+function OutcomesPricing() {
+  const packs = [
+    { id: "paket", name: "AI Kompass (2 veckor)", price: "80 000 kr", points: ["Kartläggning av värdeflöden", "Identifierade 10x-hävstänger", "Handlingsplan & prioritering"] },
+    { name: "Resultat sprinten (4 veckor)", price: "160 000 kr", points: ["MVP live, mätt och övervakad", "2 till 3 nyckelflöden automatiserade (integrationer + CI/CD)", "Styrelseklar demo + ROI-case för beslut"], featured: true },
+    { name: "Idé till MVP (6 veckor)", price: "240 000 kr", points: ["Paketering av idé till produkt", "Dataintegrationer kopplade och validerade", "Användartester med prioriterade insikter", "AI-funktion där det lönar sig", "Drift, övervakning och larmrutiner etablerade"] }
+  ];
+  return (
+    <section id="paket" className="py-16 md:py-24 bg-zinc-900/30">
+      <Container>
+        <div className="mb-10 max-w-2xl">
+          <h2 className="text-3xl md:text-4xl font-semibold tracking-tight">Från timmar till utfall</h2>
+          <p className="mt-2 text-zinc-300">Vi jobbar med utfall, inte timmar. Varje paket har tydlig omfattning, tidplan och pris. Leverablerna verifieras i drift och följs upp mot definierade mål och KPI:er. AI Kompass och Resultat sprinten riktar sig främst till scale-ups och storbolag, medan Idé till MVP passar start-ups som vill bygga en hållbar och funktionell MVP av sin idé.</p>
+        </div>
+        <div className="grid md:grid-cols-3 gap-6">
+          {packs.map((p) => (
+            <div key={p.name} className={`p-6 rounded-2xl border bg-gradient-to-br from-emerald-900/20 to-cyan-900/20 ${p.featured ? "border-emerald-700/60 shadow-lg" : "border-emerald-200/60 dark:border-emerald-700/40"}`}>
+              <h3 className="text-lg font-semibold">{p.name}</h3>
+              <div className="mt-2 flex flex-wrap gap-2">
+                {(/^(AI Kompass|Resultat sprinten)/.test(p.name)) ? (
+                  <>
+                    <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs border border-emerald-700/60">Scale-ups</span>
+                    <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs border border-emerald-700/60">Storbolag</span>
+                  </>
+                ) : (
+                  <>
+                    <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs border border-emerald-700/60">Start-ups</span>
+                    <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs border border-emerald-700/60">MVP</span>
+                  </>
+                )}
+              </div>
+              <div className="mt-2 text-2xl font-bold">{p.price}</div>
+              <ul className="mt-4 space-y-2 text-zinc-300">
+                {p.points.map((pt) => (
+                  <li key={pt} className="flex gap-2 items-start"><span className="inline-block rounded-full w-2 h-2 mt-1.5 flex-shrink-0 bg-gradient-to-br from-emerald-400 to-cyan-500" /><span>{pt}</span></li>
+                ))}
+              </ul>
+              <a href="#kontakt" className="mt-6 inline-flex w-full items-center justify-center rounded-2xl px-4 py-2 bg-white text-zinc-900">Starta samtal</a>
+            </div>
+          ))}
+        </div>
+      </Container>
+    </section>
+  );
+}
+
+function Principles() {
+  const items = [
+    { title: "Integritet & transparens", text: "Vi säger vad vi tror är rätt, även när det är obekvämt. Klara beslut vinner över fluff." },
+    { title: "Hållbarhet & perspektiv", text: "Hållbart över tid, ur alla perspektiv: teknik, team och ekonomi." },
+    { title: "Utvecklingskapital i teamet", text: "Vi lämnar efter oss system, kompetens och dokumentation som gör er starkare på egen hand." }
+  ];
+  return (
+    <section id="principer" className="py-16 md:py-24">
+      <Container>
+        <div className="mb-10 max-w-2xl">
+          <h2 className="text-3xl md:text-4xl font-semibold tracking-tight">Våra principer</h2>
+          <p className="mt-2 text-zinc-300">Det här styr våra beslut, i både konsultuppdrag och produktutveckling.</p>
+        </div>
+        <div className="grid md:grid-cols-3 gap-6">
+          {items.map((it) => (
+            <div key={it.title} className="p-6 rounded-2xl border border-emerald-200/60 dark:border-emerald-700/40 bg-gradient-to-br from-emerald-900/20 to-cyan-900/20">
+              <h3 className="text-lg font-semibold mb-2">{it.title}</h3>
+              <p className="text-zinc-300">{it.text}</p>
+            </div>
+          ))}
+        </div>
+      </Container>
+    </section>
+  );
+}
+
+function Careers() {
+  return (
+    <section id="karriar" className="py-16 md:py-24">
+      <Container>
+        <div className="mb-6 max-w-2xl">
+          <h2 className="text-3xl md:text-4xl font-semibold tracking-tight">Karriär</h2>
+        </div>
+        <div className="p-6 rounded-2xl border border-emerald-200/60 dark:border-emerald-700/40 bg-gradient-to-br from-emerald-900/20 to-cyan-900/20">
+          <p className="text-lg md:text-xl">Värde över tid. Människor över timmar.</p>
+          <p className="text-lg md:text-xl mt-2">Om du är Niovi nog så kommer vi märka det. Och du med.</p>
+        </div>
+      </Container>
+    </section>
+  );
+}
+
+function About() {
+  return (
+    <section id="om" className="py-16 md:py-24">
+      <Container>
+        <div className="max-w-3xl">
+          <h2 className="text-3xl md:text-4xl font-semibold tracking-tight">Om Niovi</h2>
+          <p className="mt-4 text-zinc-300">Niovi föddes ur en snedvriden IT-konsultvärld där människor blev beläggningsgrader. Vi är motsatsen. Vi är inte resursuthyrning, vi är resultat. Vi tar ansvar från strategi till produkt och bygger in AI först när den ger mätbar affärsnytta. Hållbart och långsiktigt, annars gör vi det inte. Från timmar till utfall. Vi bygger, skalar och lämnar er starkare än när vi kom.</p>
+          <p className="mt-3 text-zinc-300">När världen ändras snabbt under AI-skiftet står vi för lugn, tydlighet och riktning.</p>
+        </div>
+      </Container>
+    </section>
+  );
+}
+
+function Contact({ contact, setContact, flash }) {
+  return (
+    <section id="kontakt" className="py-16 md:py-24 bg-zinc-900/30">
+      <Container>
+        <div className="grid md:grid-cols-5 gap-10 items-start">
+          <div className="md:col-span-2">
+            <h2 className="text-3xl md:text-4xl font-semibold tracking-tight">Låt oss prata</h2>
+            <p className="mt-3 text-zinc-300">Beskriv kort ditt läge och vilket utfall du vill uppnå. Vi återkommer med ett förslag inom kort.</p>
+            <div className="mt-6 text-sm">
+              <p className="text-zinc-500">Bas i</p>
+              <p className="font-medium">Göteborg</p>
+            </div>
+          </div>
+          <form className={`md:col-span-3 p-6 rounded-2xl bg-gradient-to-br from-emerald-900/20 to-cyan-900/20 border border-emerald-200/60 dark:border-emerald-700/40 ${flash ? "ring-2 ring-emerald-500" : ""}`}>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm text-zinc-400">Namn</label>
+                <input required type="text" value={contact.name} onChange={(e) => setContact({ ...contact, name: e.target.value })} className="mt-1 w-full rounded-xl border border-zinc-700 bg-transparent px-3 py-2" placeholder="Ditt namn" />
+              </div>
+              <div>
+                <label className="block text-sm text-zinc-400">Epost</label>
+                <input required type="email" value={contact.email} onChange={(e) => setContact({ ...contact, email: e.target.value })} className="mt-1 w-full rounded-xl border border-zinc-700 bg-transparent px-3 py-2" placeholder="namn@företag.se" />
+              </div>
+              <div className="sm:col-span-2">
+                <label className="block text-sm text-zinc-400">Vad vill du uppnå?</label>
+                <textarea rows={5} value={contact.message} onChange={(e) => setContact({ ...contact, message: e.target.value })} className="mt-1 w-full rounded-xl border border-zinc-700 bg-transparent px-3 py-2" placeholder="Beskriv kort ditt läge och önskat utfall." />
+              </div>
+            </div>
+            <div className="mt-4 flex items-center justify-between gap-4">
+              <button type="submit" className="inline-flex items-center rounded-2xl px-5 py-3 bg-white text-zinc-900">Skicka förfrågan</button>
+              <a href="#" className="text-sm underline opacity-80 hover:opacity-100">eller maila oss direkt</a>
+            </div>
+          </form>
+        </div>
+      </Container>
+    </section>
+  );
+}
+
+function Modal({ title, children, onClose }) {
+  useEffect(() => {
+    const onKey = (e) => { if (e.key === "Escape") onClose?.(); };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [onClose]);
+  return (
+    <div className="fixed inset-0 z-50">
+      <div className="absolute inset-0 bg-black/50" onClick={onClose} />
+      <div className="absolute inset-0 grid place-items-center p-4">
+        <div className="w-full max-w-2xl rounded-2xl bg-zinc-950 border border-emerald-200/60 dark:border-emerald-700/40 shadow-2xl">
+          <div className="flex items-center justify-between px-6 py-4 border-b border-zinc-800">
+            <h3 className="text-lg font-semibold">{title}</h3>
+            <button onClick={onClose} aria-label="Stäng" className="rounded-xl px-2 py-1 border border-zinc-200 dark:border-zinc-700 hover:bg-zinc-800">✕</button>
+          </div>
+          <div className="px-6 py-5">{children}</div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ConsultModal({ onClose, onSubmit }) {
+  const [need, setNeed] = useState("Fullstack utveckling");
+  const [scope, setScope] = useState("Teamförstärkning");
+  const [timeline, setTimeline] = useState("ASAP");
+  const [notes, setNotes] = useState("");
+  const submit = (e) => {
+    e.preventDefault();
+    const summary = `Förfrågan, Konsult
+Behov: ${need}
+Scope: ${scope}
+Tidslinje: ${timeline}
+Detaljer: ${notes}`;
+    onSubmit(summary);
+  };
+  return (
+    <Modal title="Anlita konsulter" onClose={onClose}>
+      <form onSubmit={submit} className="space-y-4">
+        <div className="grid sm:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm text-zinc-400">Vad behöver ni?</label>
+            <select value={need} onChange={(e) => setNeed(e.target.value)} className="mt-1 w-full rounded-xl border border-zinc-700 bg-transparent px-3 py-2">
+              <option>Fullstack utveckling</option>
+              <option>Data & integrationer</option>
+              <option>Moln & plattform</option>
+              <option>AI integration</option>
+            </select>
+          </div>
+          <div>
+            <label className="block text-sm text-zinc-400">Scope</label>
+            <select value={scope} onChange={(e) => setScope(e.target.value)} className="mt-1 w-full rounded-xl border border-zinc-700 bg-transparent px-3 py-2">
+              <option>Teamförstärkning</option>
+              <option>Leveransåtagande</option>
+            </select>
+          </div>
+          <div>
+            <label className="block text-sm text-zinc-400">Tidslinje</label>
+            <select value={timeline} onChange={(e) => setTimeline(e.target.value)} className="mt-1 w-full rounded-xl border border-zinc-700 bg-transparent px-3 py-2">
+              <option>ASAP</option>
+              <option>0-4 veckor</option>
+              <option>1-3 månader</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <label className="block text-sm text-zinc-400">Kort beskrivning</label>
+          <textarea rows={4} value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Miljö/teknik, mål, ev. budget/tid..." className="mt-1 w-full rounded-xl border border-zinc-700 bg-transparent px-3 py-2" />
+        </div>
+        <div className="flex items-center justify-end gap-3">
+          <button type="button" onClick={onClose} className="rounded-2xl px-4 py-2 border border-zinc-700">Avbryt</button>
+          <button type="submit" className="rounded-2xl px-5 py-2 bg-white text-zinc-900">Skicka till kontakt</button>
+        </div>
+      </form>
+    </Modal>
+  );
+}
+
+function ProductModal({ onClose, onSubmit }) {
+  const [goal, setGoal] = useState("Partnerskap (minoritetsägande 10 till 30%)");
+  const [sources, setSources] = useState({ Fortnox: false, Visma: false, "Excel/CSV": false, Annat: false });
+  const [notes, setNotes] = useState("");
+  const toggle = (k) => setSources((s) => ({ ...s, [k]: !s[k] }));
+  const submit = (e) => {
+    e.preventDefault();
+    const chosen = Object.entries(sources).filter(([k, v]) => v).map(([k]) => k).join(", ") || "Ej specificerat";
+    const summary = `Förfrågan, Produktspår
+Mål: ${goal}
+Datakällor: ${chosen}
+Detaljer: ${notes}`;
+    onSubmit(summary);
+  };
+  return (
+    <Modal title="Utforska produktspåret" onClose={onClose}>
+      <form onSubmit={submit} className="space-y-4">
+        <div className="grid sm:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm text-zinc-400">Vad vill ni uppnå?</label>
+            <select value={goal} onChange={(e) => setGoal(e.target.value)} className="mt-1 w-full rounded-xl border border-zinc-700 bg-transparent px-3 py-2">
+              <option>Partnerskap (minoritetsägande 10 till 30%)</option>
+              <option>Produkt/verktyg utan ägande</option>
+              <option>Dashboards & rapportering</option>
+              <option>Presentationsunderlag</option>
+              <option>Automatiserad månadsrapport</option>
+            </select>
+          </div>
+          <div>
+            <label className="block text-sm text-zinc-400">Datakällor</label>
+            <div className="mt-2 grid grid-cols-2 gap-2">
+              {["Fortnox", "Visma", "Excel/CSV", "Annat"].map((k) => (
+                <label key={k} className="flex items-center gap-2 text-sm">
+                  <input type="checkbox" checked={!!sources[k]} onChange={() => toggle(k)} />
+                  <span>{k}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+        </div>
+        <div>
+          <label className="block text-sm text-zinc-400">Kort beskrivning</label>
+          <textarea rows={4} value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Vad bygger vi? För vem? Mål/KPI?" className="mt-1 w-full rounded-xl border border-zinc-700 bg-transparent px-3 py-2" />
+        </div>
+        <div className="flex items-center justify-end gap-3">
+          <button type="button" onClick={onClose} className="rounded-2xl px-4 py-2 border border-zinc-700">Avbryt</button>
+          <button type="submit" className="rounded-2xl px-5 py-2 bg-white text-zinc-900">Skicka till kontakt</button>
+        </div>
+      </form>
+    </Modal>
+  );
+}
+
+function Footer() {
+  return (
+    <footer className="py-10 border-t border-zinc-800">
+      <Container>
+        <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-sm">
+          <div className="flex items-center gap-2">
+            <img src="img/primary_silverLarge.png" alt="Niovi" className="h-7 w-auto" />
+          </div>
+          <nav className="flex flex-wrap items-center gap-4 text-zinc-400">
+            <a href="#tjanster">Vad vi gör</a>
+            <a href="#konsult-info">Konsulttjänster</a>
+            <a href="#produkt-info">Produkt & partnerskap</a>
+            <a href="#paket">Paket & priser</a>
+            <a href="#karriar">Karriär</a>
+            <a href="#kontakt">Kontakt</a>
+          </nav>
+          <div className="opacity-70">© {new Date().getFullYear()} The Niovi Perspective AB</div>
+        </div>
+      </Container>
+    </footer>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(NioviSite));
+    </script>
   </body>
 </html>
